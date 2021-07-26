@@ -11,37 +11,35 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Future.delayed(
-        Duration(seconds: 3),
-        () => getLocation(),
-      );
-    });
   }
 
-  void getLocation() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => GetStartedScreen()),
-    );
+  Future getLocation() async {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GetStartedScreen()),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder(builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text('Loading');
-        } else if (snapshot.hasError) {
-          return Text('Error : ${snapshot.error}  ');
-        } else {
-          return SizedBox(
-            width: 60,
-            height: 60,
-            child: CircularProgressIndicator(),
-          );
-        }
-      }),
+      child: FutureBuilder(
+          future: getLocation(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text('Loading');
+            } else if (snapshot.hasError) {
+              return Text('Error : ${snapshot.error}  ');
+            } else {
+              return SizedBox(
+                width: 60,
+                height: 60,
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }
